@@ -1,124 +1,159 @@
+# 🐱🐶 Cat vs. Dog Image Classifier — CNN with Transfer Learning (VGG16)
+
+A binary image classifier that distinguishes between cats and dogs using **Convolutional Neural Networks (CNNs)** and **transfer learning** with the pre-trained VGG16 architecture. Achieves ~95.6% validation accuracy in just 5 epochs.
 
 ---
 
-# CNN Model for Cat and Dog Classification Using Transfer Learning (VGG16)
+## 📋 Table of Contents
 
-## Project Overview
-
-This project involves building a Convolutional Neural Network (CNN) model to classify images of cats and dogs. The model leverages transfer learning using the VGG16 architecture, pre-trained on the ImageNet dataset. Fine-tuning techniques were applied to enhance the model's performance on the specific task of classifying cats and dogs.
-
-## Table of Contents
-- [Project Overview](#project-overview)
+- [Overview](#overview)
+- [Results](#results)
+- [Project Structure](#project-structure)
+- [Getting Started](#getting-started)
 - [Model Architecture](#model-architecture)
 - [Dataset](#dataset)
-- [Installation](#installation)
-- [Usage](#usage)
-- [Results](#results)
-- [Future Work](#future-work)
-- [Contributing](#contributing)
-- [Contact](#contact)
+- [Training Configuration](#training-configuration)
+- [License](#license)
 
-## Model Architecture
+---
 
-The model is built using the following architecture:
+## Overview
 
-- **Base Model**: VGG16 pre-trained on the ImageNet dataset.
-- **Transfer Learning**: The base model's convolutional layers are frozen, and a new fully connected (dense) layer is added on top of the base model for classification.
-- **Fine-Tuning**: The last few layers of the VGG16 base model are unfrozen, allowing them to be retrained alongside the new fully connected layers. This helps in fine-tuning the model to better fit the cat and dog classification task.
+This project leverages **transfer learning** with VGG16 (pre-trained on ImageNet) to build a robust cat vs. dog classifier. Rather than training a deep CNN from scratch — which would require a large dataset and significant compute — we freeze the earlier convolutional blocks and fine-tune only the last block (`block5`) to adapt the network to our binary classification task.
 
-### Layers:
-- **Input Layer**: (150x150x3) - Images are resized to 150x150 pixels with 3 color channels (RGB).
-- **VGG16 Base Model**: All convolutional layers from VGG16 (with weights pre-trained on ImageNet).
-- **Fully Connected Layers**: 
-  - Dense Layer with ReLU activation
-  - Dropout Layer to prevent overfitting
-  - Output Layer with Sigmoid activation for binary classification
+**Why transfer learning?**
+- Dramatically reduces training time and required data
+- Leverages rich visual features already learned from 1.2M ImageNet images
+- Achieves high accuracy with minimal overfitting
 
-### Optimizer & Loss:
-- **Optimizer**: RMSprop with a learning rate of 1e-5
-- **Loss Function**: Binary Crossentropy
-- **Metrics**: Accuracy
-
-## Dataset
-
-- **Training Data**: The model was trained on a dataset of cat and dog images. The images were organized into two subdirectories, one for each class.
-- **Validation Data**: A separate dataset was used for validation to evaluate the model's performance during training.
-
-## Installation
-
-To run this project locally, follow these steps:
-
-1. **Clone the repository:**
-
-   ```bash
-   git clone https://github.com/your-username/your-repo-name.git
-   cd your-repo-name
-   ```
-
-2. **Create a virtual environment:**
-
-   ```bash
-   python -m venv venv
-   source venv/bin/activate  # On Windows use `venv\Scripts\activate`
-   ```
-
-3. **Install the required packages:**
-
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-4. **Download the dataset:**
-
-   Place the training and validation images in the appropriate directories:
-   - `train/`: Containing subdirectories for each class (e.g., `train/cats/`, `train/dogs/`)
-   - `test/`: Containing subdirectories for each class (e.g., `test/cats/`, `test/dogs/`)
-
-## Usage
-
-1. **Training the Model:**
-
-   To train the model, run:
-
-   ```bash
-   python train.py
-   ```
-
-   This script will train the model using the training data and validate it using the validation data.
-
-2. **Making Predictions:**
-
-   To use the trained model to classify a new image, run:
-
-   ```bash
-   python predict.py --image_path /path/to/your/image.jpg
-   ```
-
-   Replace `/path/to/your/image.jpg` with the path to the image you want to classify.
+---
 
 ## Results
 
-- **Training Accuracy**: Achieved ~83.6% accuracy on the training dataset.
-- **Validation Accuracy**: Achieved ~92.2% accuracy on the validation dataset.
-
-The model shows good generalization with a higher validation accuracy than training accuracy, indicating that the fine-tuning approach was effective.
-
-## Future Work
-
-- **Expand the Dataset**: Include more images and additional classes (e.g., other animals) to improve the model's robustness.
-- **Experiment with Other Architectures**: Test other pre-trained models like ResNet, Inception, or EfficientNet for potentially better performance.
-- **Deploy the Model**: Deploy the model using a web framework like Flask or a tool like Streamlit for easy accessibility.
-
-## Contributing
-
-Contributions are welcome! If you have suggestions for improvements or find any issues, feel free to open an issue or submit a pull request.
-
-## Contact
-
-For any questions or collaboration opportunities, please reach out to:
-
-- **Name**: Abdul Mukit
-- **LinkedIn**: [Abdul Mukit](https://www.linkedin.com/in/abdul-mukit-1bbb72218/)
-- **GitHub**: (https://github.com/kazirafi17)
+| Metric | Value |
+|---|---|
+| Architecture | VGG16 + Custom Classification Head |
+| Fine-tuned from | `block5_conv1` |
+| Input Size | 150 × 150 × 3 |
+| Optimizer | RMSprop (lr = 1e-5) |
+| Loss Function | Binary Crossentropy |
+| Epochs | 5 |
+| Training Accuracy | ~95.4% |
+| Validation Accuracy | ~95.6% |
 
 ---
+
+## Project Structure
+
+```
+CatDogClassifier/
+│
+├── CatDogCNNClassifier.ipynb   # Main notebook (training + inference)
+├── requirements.txt            # Python dependencies
+└── README.md                   # Project documentation
+```
+
+---
+
+## Getting Started
+
+### Prerequisites
+
+- Python 3.10+
+- A [Kaggle account](https://www.kaggle.com) with an API key (`kaggle.json`)
+- GPU runtime recommended (Google Colab or local CUDA setup)
+
+### Installation
+
+**1. Clone the repository**
+```bash
+git clone https://github.com/kazirafi17/DogVsCatClassifier.git
+cd DogVsCatClassifier
+```
+
+**2. Install dependencies**
+```bash
+pip install -r requirements.txt
+```
+
+**3. Set up Kaggle credentials**
+
+Download your `kaggle.json` API key from [kaggle.com/settings](https://www.kaggle.com/settings) and place it in the project directory. The notebook will configure it automatically.
+
+### Running the Notebook
+
+Open `CatDogCNNClassifier.ipynb` in Jupyter or Google Colab and run the cells sequentially. The notebook will:
+
+1. Download and extract the dataset from Kaggle
+2. Preprocess and augment the training images
+3. Build and fine-tune the VGG16-based model
+4. Plot training/validation accuracy and loss curves
+5. Run inference on new images
+
+---
+
+## Model Architecture
+
+```
+Input (150 × 150 × 3)
+        │
+   ┌────▼─────┐
+   │  VGG16   │  ← Pre-trained on ImageNet
+   │          │     blocks 1–4: frozen
+   │          │     block5:     fine-tuned
+   └────┬─────┘
+        │
+     Flatten
+        │
+   Dense(256, ReLU)
+        │
+   Dense(64, ReLU)
+        │
+   Dense(1, Sigmoid)
+        │
+   Output: P(Dog)
+```
+
+A sigmoid output > 0.5 is classified as **Dog**, otherwise **Cat**.
+
+---
+
+## Dataset
+
+**Dogs vs. Cats** from Kaggle — 25,000 labeled images (12,500 cats, 12,500 dogs) split into `train/` and `test/` directories.
+
+```
+kaggle datasets download -d salader/dogs-vs-cats
+```
+
+Images vary in resolution and are resized to **150 × 150** during preprocessing.
+
+### Data Augmentation (training only)
+
+| Technique | Value |
+|---|---|
+| Rescale | 1/255 |
+| Shear Range | 0.2 |
+| Zoom Range | 0.2 |
+| Horizontal Flip | Enabled |
+
+---
+
+## Training Configuration
+
+```python
+IMG_SIZE   = (150, 150)
+BATCH_SIZE = 32
+EPOCHS     = 5
+OPTIMIZER  = RMSprop(learning_rate=1e-5)
+LOSS       = "binary_crossentropy"
+SEED       = 42
+```
+
+The low learning rate (`1e-5`) is intentional — it prevents the fine-tuning step from overwriting the pre-trained weights too aggressively.
+
+---
+
+## License
+
+This project is open-source and available under the [MIT License](https://opensource.org/licenses/MIT).
